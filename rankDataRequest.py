@@ -3,6 +3,10 @@
 import blpapi
 import sys
 import datetime
+import os
+
+# for additional DEBUG logging
+#os.environ['BLPAPI_LOGLEVEL'] = 'DEBUG'
 
 SESSION_STARTED                 = blpapi.Name("SessionStarted")
 SESSION_STARTUP_FAILURE         = blpapi.Name("SessionStartupFailure")
@@ -13,64 +17,58 @@ SESSION_TERMINATED              = blpapi.Name("SessionTerminated")
 SERVICE_OPENED                  = blpapi.Name("ServiceOpened")
 SERVICE_OPEN_FAILURE            = blpapi.Name("ServiceOpenFailure")
 
-#SLOW_CONSUMER_WARNING           = blpapi.Name("SlowConsumerWarning")
-#SLOW_CONSUMER_WARNING_CLEARED   = blpapi.Name("SlowConsumerWarningCleared")
+SLOW_CONSUMER_WARNING           = blpapi.Name("SlowConsumerWarning")
+SLOW_CONSUMER_WARNING_CLEARED   = blpapi.Name("SlowConsumerWarningCleared")
 
 ERROR_INFO                      = blpapi.Name("ErrorInfo")
-GET_RANK_DATA_RESPONSE          = blpapi.Name("GetRankDataResponse")
-
+REPORT                          = blpapi.Name("Report")
+  
 # desktop authentication
 # beta service
 d_service="//blp/rankapi-beta"
+
 # prod service
 #d_service="//blp/rankapi"
 
 d_host="localhost"
 d_port=8194
+
 bEnd=False
 
 class SessionEventHandler():
 
-    # start of create new rank request
     def processEvent(self, event, session):
         try:
-            
-            if event.eventType() == blpapi.Event.ADMIN:
-                self.processAdminEvents(event)
-
-            elif event.eventType() == blpapi.Event.SESSION_STATUS:
+            if event.eventType() == blpapi.Event.SESSION_STATUS:
                 self.processSessionStatusEvent(event,session)
-                        
+            
             elif event.eventType() == blpapi.Event.SERVICE_STATUS:
                 self.processServiceStatusEvent(event,session)
-            
-            elif event.eventType() == blpapi.Event.RESPONSE:
-                self.processResposeEvent(event)
-            
-            elif event.eventType() == blpapi.Event.PARTIAL_RESPONSE:
-                self.processPartialResponseEvent(event)
+
+            elif event.eventType() == blpapi.Event.RESPONSE or event.eventType() == blpapi.Event.PARTIAL_RESPONSE:
+                self.processResponseEvent(event)
             
             else:
                 self.processMiscEvents(event)
-        
+                
         except:
-            print ("Exception: %s" % sys.exc_info()[0])
-        
+            print ("Exception:  %s" % sys.exc_info()[0])
+            
         return False
 
     # only relevant for subscription service
-    # def processAdminEvents(self, event):
-    #         print ("Processing ADMIN event")
+    def processAdminEvents(self, event):
+            print ("Processing ADMIN event")
 
-    #         for msg in event:
-    #             if msg.messageType() == SLOW_CONSUMER_WARNING:
-    #                 print ("Warning: Entered Slow Consumer status")
+            for msg in event:
+                if msg.messageType() == SLOW_CONSUMER_WARNING:
+                    print ("Warning: Entered Slow Consumer status")
 
-    #             elif msg.messageType() == SLOW_CONSUMER_WARNING_CLEARED:
-    #                 sys.stderr.write("Slow Consumer status cleared")
+                elif msg.messageType() == SLOW_CONSUMER_WARNING_CLEARED:
+                    sys.stderr.write("Slow Consumer status cleared")
                 
-    #             else:
-    #                 print(msg)                 
+                else:
+                    print(msg)                 
     
 
     def processSessionStatusEvent(self, event, session):
@@ -95,7 +93,7 @@ class SessionEventHandler():
             
             else:
                 print (msg)
-    
+   
 
     def processServiceStatusEvent(self, event, session):
         print ("Processing SERVICE_STATUS event")
@@ -104,86 +102,107 @@ class SessionEventHandler():
 
             if msg.messageType() == SERVICE_OPENED:
                 print ("Service opened...")
-
                 service = session.getService(d_service)
-
+                
                 # build request
                 request = service.createRequest("Query")
-
-                request.set("Query")
-
-                brokers = request.getElement("brokers")
                 
-                #brokers.setChoice("acronym")
-                #brokers.setChoice("name")
-                #brokers.setChoice("rank")
+                ### specify broker by acronym, name or rank
+                #broker = request.getElement("brokers").appendElement()
+                #broker.setElement("acronym", "BCAP"); # acronym
+                # broker.setElement("name", "") # name of the broker (e.g. entity name in IREG<GO>?)
+                # broker.setElement("rank", 1) # rank of the broker
 
-                #brokers.setElement("acronym", "") 
-                #brokers.setElement("name", "")
-                #brokers.setElement("rank", ) 
+                ### set date/time range
+                request.set("start", datetime.datetime(2020, 2, 1, 0, 0, 0, 0)) 
+                request.set("end", datetime.datetime(2020, 2, 12, 0, 0, 0, 0)) 
+                            
+                ### groupby 0=Broker , 1=Security
+                # on the schema it looks to have  enum set as either 0 or 1 (verify)
+                request.set("groupBy", "Broker")
+               
+                ### exchanges or securities 
+                # exchanges can be set either using code or name
+                #exchanges = request.getElement("securityCriteria").setChoice("exchanges")
+                #exchange = exchanges.appendElement()
+                #exchange.setElement("code", "US");
+                #exchange = exchanges.appendElement()
+                #exchange.setElement("code", "CG");
+                #exchange = exchanges.appendElement()
+                #exchange.setElement("name", ""); # name of the exchanges (verify, mic code? actual name? EPRX<GO>?)
 
-                # set date
-                request.set("start", datetime.datetime(2020, 1, 1, 0, 0, 0, 0)) # 2020-Jan-01
-                request.set("end", datetime.datetime(2020, 1, 9, 0, 0, 0, 0)) # 2020-Jan-09
+                ### securities can be set to either ticker or figi
+                securities = request.getElement("securityCriteria").setChoice("securities")
+                security = securities.appendElement()
+                security.setElement("ticker", "AAPL US Equity");
+                #security.setElement("figi", "BBG000B9XRY4"); # figi for AAPL US Equity
+              
+                ### source enum 0=Broker Contributed
+                request.set("source", "Broker Contributed")
+
+                ### units enum 0=Shares, 1=Local, 2=USD, 3=EUR, 4=GBP
+                request.set("units", "Shares")             
                 
-                # group by  0= , 1=
-                request.set("groupBy","")
+                print ("Sending Request: %s" % request.toString())
+
+                #self.requestID = session.sendRequest(request)
                 
-                # securities or exchanges
-                SecurityCriteria = request.getElement("SecurityCriteria")
-                SecurityCriteria.setChoice("securities")
-                # SecurityCriteria.setChoice("exchanges")
-
-                Security = request.getElement("Security")
-                Security.setChoice("ticker").appendValue("AAPL US Equity")
-                # Security.setchoice("figi").appendvalue("ABC1234")
-
-
-                # enumerationType Source 0=Broker 1=Security
-                request.getElement("Source").appendValue(1)   
-
-                # enumerationType 0=Shares, 1=Local, 2=USD, 3=EUR, 4=GBP
-                request.getElement("Units").appendValue("1")
-
-
-
-                print ("Request: %s" % request.toString())
-
                 self.requestID = blpapi.CorrelationId()
-
-                session.sendRequest(request, correlationID=self.requestID)
+                session.sendRequest(request, correlationId=self.requestID)
+                
+                print ("RANK data request sent.")
 
             elif msg.messageType() == SERVICE_OPEN_FAILURE:
                 print >> sys.stderr, ("Error: Service failed to open")
-    
+
 
     def processResponseEvent(self, event):
         print ("Processing RESPONSE event")
 
         for msg in event:
+            # for printing raw message
+            #print(msg)
 
             if msg.correlationIds()[0].value() == self.requestID.value():
                 print ("MESSAGE TYPE: %s" % msg.messageType())
 
                 if msg.messageType() == ERROR_INFO:
-                    errorCode = msg.getElementAsInteger("ERROR_CODE")
-                    errorMessage = msg.getElementAsString("ERROR_MESSAGE")
-                    print ("ERROR CODE: %d\tERROR MESSAGE: %s" % (errorCode, errorMessage))
-                elif msg.messageType() == GET_RANK_DATA_RESPONSE:
+                    errorCode = msg.getElementAsInteger("errorCode")
+                    errorMessage = msg.getElementAsString("errorMessage")
+                    timestampUtc = msg.getElementAsFloat("timestamp Utc")
+                    print ("ERROR CODE: %d\tERROR MESSAGE: %s" % (errorCode,errorMessage))    
+                
+                elif msg.messageType() == REPORT:
 
-                    print(msg)
+                    records = msg.getElement("records")
+                    print(records)
 
-                    # rankData = msg.getElement("rankDataResponse")
-                    # for rankData in rankData.values():
-                    #        columnns = 
+                #     for record in records.values():
 
-                    
-            global bEnd
-            bEnd = True
+                #         bought = record.getElement("bought").getValueAsFloat()
+                #         broker = record.getElement("broker").getElement("acronym").getValue()
+                #         #broker = record.getElement("broker").getElement("rank").getValue()
+                #         #broker = record.getElement("broker").getElement("name").getValue()
+                #         crossed = record.getElement("crossed").getValueAsFloat()
+                #         highTouch = record.getElement("highTouch").getValueAsFloat()
+                #         lowTouch = record.getElement("lowTouch").getValueAsFloat()
+                #         numReports = record.getElement("numReports").getValueAsInteger()
+                #         #security = record.getElement("security").getElement("figi").getValue()
+                #         security = record.getElement("security").getElement("ticker").setChoice()
+                #         sold = record.getElement("sold").getValueAsFloat()
+                #         topBrokers = record.getElement("topBrokers").getElement("acronym").getValue()
+                #         #topBrokers = record.getElement("topBrokers").getElement("name").getValue()
+                #         #topBrokers = record.getElement("topBrokers").getElement("rank").getValue()
+                #         total = record.getElement("total").getValueAsFloat()
+                #         traded = record.getElement("traded").getValueAsFloat()
 
+                #         print ("Bought: %f\tBroker: %s\tCrossed: %f" % (bought, broker, crossed))
+                #         print ("numReports %d\ttopBroker: %s\ttotal: %f\ttraded: %f" % (numReports, topBrokers, total, traded))     
+                # global bEnd
+                # bEnd = True    
+                        
 
     def processMiscEvents(self, event):
-
         print ("Processing " + event.eventType() + " event")
 
         for msg in event:
@@ -193,12 +212,11 @@ class SessionEventHandler():
 
 def main():
 
-    
-
     sessionOptions = blpapi.SessionOptions()
     sessionOptions.setServerHost(d_host)
     sessionOptions.setServerPort(d_port)
-
+    sessionOptions.setMaxPendingRequests(1)
+    
     print ("Connecting to %s:%d" % (d_host, d_port))
 
     eventHandler = SessionEventHandler()
