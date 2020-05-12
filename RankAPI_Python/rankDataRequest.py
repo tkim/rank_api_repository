@@ -107,7 +107,7 @@ class SessionEventHandler():
                 # build request
                 request = service.createRequest("Query")
                 
-                ### specify broker by acronym, name or rank
+                ### specify broker by acronym or rank
                 #broker = request.getElement("brokers").appendElement()
                 #broker.setElement("acronym", "BCAP"); # acronym
                 # broker.setElement("rank", 1) # rank of the broker
@@ -121,7 +121,7 @@ class SessionEventHandler():
                 request.set("groupBy", "Security")
 
                 ### exchanges or securities 
-                # exchanges can be set using code 
+                # exchanges can be set using Bloomberg exchange code 
                 #exchanges = request.getElement("securityCriteria").setChoice("exchanges")
                 #exchange = exchanges.appendElement()
                 #exchange.setElement("code", "US");
@@ -180,14 +180,11 @@ class SessionEventHandler():
                 #         highTouch = record.getElement("highTouch").getValueAsFloat()
                 #         lowTouch = record.getElement("lowTouch").getValueAsFloat()
                 #         numReports = record.getElement("numReports").getValueAsInteger()
-                #         sold = record.getElement("sold").getValueAsFloat()
-                #         topBrokers = record.getElement("topBrokers").getElement("acronym").getValue()
-                #         #topBrokers = record.getElement("topBrokers").getElement("name").getValue()
-                #         #topBrokers = record.getElement("topBrokers").getElement("rank").getValue()
+                #         sold = record.getElement("sold").getValueAsFloat
                 #         total = record.getElement("total").getValueAsFloat()
                 #         traded = record.getElement("traded").getValueAsFloat()
 
-                #         print ("Bought: %f\tBroker: %s\tCrossed: %f" % (bought, broker, crossed))
+                #         print ("Bought: %f\tBroker: %s\tCrossed: %f" % (bought, crossed))
                 #         print ("numReports %d\ttopBroker: %s\ttotal: %f\ttraded: %f" % (numReports, topBrokers, total, traded))     
                 # global bEnd
                 # bEnd = True    

@@ -151,22 +151,22 @@ namespace rankDataRequest
                     // create request
                     Request query = service.CreateRequest("Query");
 
-                    // specify broker by acronym, name or rank
+                    // specify broker by acronym or rank
                     Element broker = query.GetElement("brokers");
                     broker = query.GetElement("brokers").AppendElement();
                     broker.SetElement("acronym", "BCAP"); // broker acronym
                     //broker.SetElement("rank", 1); // rank of the broker
 
-                    // set date range;
+                    // set date range
                     query.Set("start", "2020-01-01");
                     query.Set("end", "2020-04-01");
 
                     // group by 0=Broker, 1=Security
                     query.Set("groupBy", "Broker");
-                    //request.Set("groupBy", "Security");
+                    //query.Set("groupBy", "Security");
 
                     // exchanges or securities
-                    // exchanges can be set either using code or name                
+                    // exchanges can be set using Bloomberg exchange code                
                     //Element securities = query.GetElement("securityCriteria").SetChoice("exchanges");
                     //Element exchange = securities.AppendElement();
                     //exchange.GetElement("code").SetValue("US");
@@ -175,10 +175,7 @@ namespace rankDataRequest
                     Element securities = query.GetElement("securityCriteria").SetChoice("securities");
                     Element security = securities.AppendElement();
                     security.SetElement("ticker", "AAPL US Equity");
-           
-                    
-                    //securityCriteria.SetChoice("exchanges");
-                    //securityCriteria.GetElement("figi").AppendValue ("BBG000B9XRY4"); // figi for AAPL US Equity
+                    //security.SetElement("figi", "BBG000B9XRY4"); // figi for AAPL US Equity
 
                     // sources enum 0=Broker Contributed
                     query.Set("source", "Broker Contributed");
@@ -252,7 +249,6 @@ namespace rankDataRequest
                             //string figi = security.GetElementAsString("figi");
 
                             double sold = record.GetElementAsFloat64("sold");
-
                             double total = record.GetElementAsFloat64("total");
                             double traded = record.GetElementAsFloat64("traded");
 
