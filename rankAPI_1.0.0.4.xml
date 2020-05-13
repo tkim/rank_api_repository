@@ -1,0 +1,287 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Created with Liquid XML 2016 Designer Edition 14.1.2.6578 (https://www.liquid-technologies.com) -->
+<ServiceDefinition xmlns="http://bloomberg.com/schemas/apidd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    
+xsi:schemaLocation="http://bloomberg.com/schemas/apidd apidd.xsd"
+    
+name="blp.rankapi-beta" version="1.0.0.4"
+>
+
+    <service name="//blp/rankapi-beta" version="1.0.0.4"
+        authorizationService="//blp/apiauth"
+>
+
+        <operation name="Query"
+>
+            <request>request</request>
+            <requestSelection>Query</requestSelection>
+            <response>response</response>
+            <responseSelection>Exception</responseSelection>
+            <responseSelection>Report</responseSelection>
+            <timeout>600</timeout>
+        </operation>
+        <defaultServiceId>196994</defaultServiceId>
+        <resolutionService></resolutionService>
+        <publisherSupportsRecap>false</publisherSupportsRecap>
+        <authoritativeSourceSupportsRecap>false</authoritativeSourceSupportsRecap>
+        <isInfrastructureService>false</isInfrastructureService>
+        <isMetered>false</isMetered>
+        <appendMtrId>false</appendMtrId>
+    </service>
+    <schema>
+        <sequenceType name="Query">
+            <description>seqQuery</description>
+            <element name="start" type="Date">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="end" type="Date">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="units" type="Units">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="source" type="Source">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="securityCriteria" type="SecurityCriteria">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="brokers" type="Broker" maxOccurs="unbounded">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="groupBy" type="GroupBy">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+        </sequenceType>
+        <sequenceType name="Exchange">
+            <description>seqExchange</description>
+            <element name="code" type="String">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+        </sequenceType>
+        <sequenceType name="Broker">
+            <description>seqBroker</description>
+            <element name="acronym" type="String">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="name" type="String">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="rank" type="Int32">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+        </sequenceType>
+        <sequenceType name="Report">
+            <description>seqReport</description>
+            <element name="records" type="Record" maxOccurs="unbounded">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="timestampUtc" type="Datetime">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+        </sequenceType>
+        <sequenceType name="Record">
+            <description>seqRecord</description>
+            <element name="security" type="Security" minOccurs="0"
+                maxOccurs="1">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="broker" type="Broker" minOccurs="0" maxOccurs="1">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="topBrokers" type="Broker" maxOccurs="unbounded">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="bought" type="Float64">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="sold" type="Float64">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="traded" type="Float64">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="crossed" type="Float64">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="total" type="Float64">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="highTouch" type="Float64">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="lowTouch" type="Float64">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="numReports" type="Int32">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+        </sequenceType>
+        <sequenceType name="Exception">
+            <description>seqException</description>
+            <element name="errorMessage" type="String">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="errorCode" type="Int32">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+        </sequenceType>
+        <choiceType name="request">
+            <description>choicerequest</description>
+            <element name="Query" type="Query">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+        </choiceType>
+        <choiceType name="SecurityCriteria">
+            <description>choiceSecurityCriteria</description>
+            <element name="securities" type="Security" maxOccurs="unbounded">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="exchanges" type="Exchange" maxOccurs="unbounded">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+        </choiceType>
+        <choiceType name="Security">
+            <description>choiceSecurity</description>
+            <element name="ticker" type="String">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="figi" type="String">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+        </choiceType>
+        <choiceType name="response">
+            <description>choiceresponse</description>
+            <element name="Report" type="Report">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+            <element name="Exception" type="Exception">
+                <description></description>
+                <cacheable>true</cacheable>
+                <cachedOnlyOnInitialPaint>false</cachedOnlyOnInitialPaint>
+            </element>
+        </choiceType>
+        <enumerationType name="Units" type="Int32">
+            <description></description>
+            <enumerator name="Shares">
+                <description></description>
+                <value>
+                    <Int32>0</Int32>
+                </value>
+            </enumerator>
+            <enumerator name="Local">
+                <description></description>
+                <value>
+                    <Int32>1</Int32>
+                </value>
+            </enumerator>
+            <enumerator name="USD">
+                <description></description>
+                <value>
+                    <Int32>2</Int32>
+                </value>
+            </enumerator>
+            <enumerator name="EUR">
+                <description></description>
+                <value>
+                    <Int32>3</Int32>
+                </value>
+            </enumerator>
+            <enumerator name="GBP">
+                <description></description>
+                <value>
+                    <Int32>4</Int32>
+                </value>
+            </enumerator>
+        </enumerationType>
+        <enumerationType name="Source" type="Int32">
+            <description></description>
+            <enumerator name="Broker Contributed">
+                <description></description>
+                <value>
+                    <Int32>0</Int32>
+                </value>
+            </enumerator>
+        </enumerationType>
+        <enumerationType name="GroupBy" type="Int32">
+            <description></description>
+            <enumerator name="Broker">
+                <description></description>
+                <value>
+                    <Int32>0</Int32>
+                </value>
+            </enumerator>
+            <enumerator name="Security">
+                <description></description>
+                <value>
+                    <Int32>1</Int32>
+                </value>
+            </enumerator>
+        </enumerationType>
+    </schema>
+</ServiceDefinition>
