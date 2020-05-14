@@ -40,7 +40,7 @@ public class RankDataRequest {
 	private static final Name 	SERVICE_OPENED 			= new Name("ServiceOpened");
 	private static final Name 	SERVICE_OPEN_FAILURE 	= new Name("ServiceOpenFailure");
 	
-    private static final Name 	ERROR_INFO = new Name("ErrorInfo");
+    private static final Name 	EXCEPTION = new Name("Exception");
     private static final Name 	REPORT = new Name("Report");
 
 	private String 	d_service;

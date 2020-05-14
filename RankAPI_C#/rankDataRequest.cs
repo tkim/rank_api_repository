@@ -39,7 +39,7 @@ namespace rankDataRequest
         private static readonly Name SERVICE_OPENED = new Name("ServiceOpened");
         private static readonly Name SERVICE_OPEN_FAILURE = new Name("ServiceOpenFailure");
 
-        private static readonly Name ERROR_INFO = new Name("ErrorInfo");
+        private static readonly Name EXCEPTION = new Name("Exception");
         private static readonly Name REPORT = new Name("Report");
 
         private string d_service;

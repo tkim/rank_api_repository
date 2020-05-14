@@ -20,7 +20,7 @@ SERVICE_OPEN_FAILURE            = blpapi.Name("ServiceOpenFailure")
 SLOW_CONSUMER_WARNING           = blpapi.Name("SlowConsumerWarning")
 SLOW_CONSUMER_WARNING_CLEARED   = blpapi.Name("SlowConsumerWarningCleared")
 
-ERROR_INFO                      = blpapi.Name("ErrorInfo")
+EXCEPTION                      = blpapi.Name("Exception")
 REPORT                          = blpapi.Name("Report")
   
 # desktop authentication
