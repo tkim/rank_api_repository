@@ -110,7 +110,7 @@ class SessionEventHandler():
                 ### specify broker by acronym or rank
                 #broker = request.getElement("brokers").appendElement()
                 #broker.setElement("acronym", "BCAP"); # acronym
-                # broker.setElement("rank", 1) # rank of the broker
+               
 
                 ### set date/time range
                 request.set("start", datetime.datetime(2020, 1, 1, 0, 0, 0, 0)) 
@@ -164,12 +164,13 @@ class SessionEventHandler():
                 if msg.messageType() == ERROR_INFO:
                     errorCode = msg.getElementAsInteger("errorCode")
                     errorMessage = msg.getElementAsString("errorMessage")
-                    timestampUtc = msg.getElementAsFloat("timestamp Utc")
+                    
                     print ("ERROR CODE: %d\tERROR MESSAGE: %s" % (errorCode,errorMessage))    
                 
                 elif msg.messageType() == REPORT:
 
                     records = msg.getElement("records")
+                    #timestampUtc = msg.getElementAsDateTime("timestampUtc")
                     print(records)
 
                 #     for record in records.values():
@@ -183,7 +184,6 @@ class SessionEventHandler():
                 #         sold = record.getElement("sold").getValueAsFloat
                 #         total = record.getElement("total").getValueAsFloat()
                 #         traded = record.getElement("traded").getValueAsFloat()
-
                 #         print ("Bought: %f\tBroker: %s\tCrossed: %f" % (bought, crossed))
                 #         print ("numReports %d\ttopBroker: %s\ttotal: %f\ttraded: %f" % (numReports, topBrokers, total, traded))     
                 # global bEnd
