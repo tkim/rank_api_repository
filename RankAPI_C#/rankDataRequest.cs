@@ -80,6 +80,7 @@ namespace rankDataRequest
         private void run(String[] args)
         {
             SessionOptions d_sessionOptions = new SessionOptions();
+            
             d_sessionOptions.ServerHost = d_host;
             d_sessionOptions.ServerPort = d_port;
 
@@ -155,7 +156,6 @@ namespace rankDataRequest
                     Element broker = query.GetElement("brokers");
                     broker = query.GetElement("brokers").AppendElement();
                     broker.SetElement("acronym", "BCAP"); // broker acronym
-                    //broker.SetElement("rank", 1); // rank of the broker
 
                     // set date range
                     query.Set("start", "2020-01-01");

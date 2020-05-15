@@ -162,8 +162,7 @@ public class RankDataRequest {
 					Element broker = query.getElement("brokers");
 					broker = query.getElement("brokers").appendElement();
 					broker.setElement("acronym", "BCAP"); // broker acronym
-					//broker.setElement("rank", 1); //rank of the broker
-
+					
 					// set date range
             	    query.set("start", "2020-01-01");
             	    query.set("end", "2020-05-01");
